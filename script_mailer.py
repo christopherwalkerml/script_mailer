@@ -7,6 +7,7 @@ def get_auth():
     with open('env.txt') as f:
         auth['auth'] = f.readline().strip()
         auth['sid'] = f.readline().strip()
+        auth['phone_num'] = f.readline().strip()
         return auth
 
 
@@ -51,11 +52,12 @@ def load_numbers():
         return f.readlines()
 
 
-def send_message(message, number):
-    client.messages.create(
-        to=number,
-        from_="+17054827843",
-        body=message
+def send_message(message, number, from_num):
+    with open('env.txt') as f:
+        client.messages.create(
+            to=number,
+            from_=from_num,
+            body=message
         )
 
 if __name__ == "__main__":
@@ -69,6 +71,6 @@ if __name__ == "__main__":
         num = n.strip()
         number_location = get_loc(num)
 
-        send_message(script[number_location], num)
+        send_message(script[number_location], num, auth['phone_num'])
 
         set_loc(num, number_location + 1)
